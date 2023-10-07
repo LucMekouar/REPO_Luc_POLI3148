@@ -153,4 +153,4 @@ educational_quality |> select(Country, Year, `Educational inequality`) |>
   slice_min(order_by = `Educational inequality`, n = 5)
 ```
 
-link to github r markdown file: \<<https://github.com/LucMekouar/REPO_Luc_> POLI3148/blob/main/week%205\_\_data%20wrangling.2%20%26%20data%20visualization.1 /HW/2.0Lec4-5%20In-Class%20Exercise.Rmd\>
+[link to github r markdown file](https://github.com/LucMekouar/REPO_Luc_POLI3148/blob/main/week%205__data%20wrangling.2%20%26%20data%20visualization.1/HW/2.0Lec4-5%20In-Class%20Exercise.Rmd)
