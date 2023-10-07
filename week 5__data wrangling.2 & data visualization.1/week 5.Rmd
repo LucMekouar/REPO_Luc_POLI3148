@@ -1,0 +1,19 @@
+---
+title: "NEW LEC In class notes"
+author: "Luc"
+date: "2023-10-05"
+output: pdf_document
+---
+
+```{r}
+
+d_subset <- d |> select(country_name, year, starts_with("e_"))
+
+d_subset_long <-
+  d_subset |> pivot_longer(cols = starts_with("e_"))
+```
+
+```{r}
+d_1984_2022 <- bind_rows(d,d_1945_1983)
+```
+
