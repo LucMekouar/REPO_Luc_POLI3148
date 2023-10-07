@@ -1,11 +1,9 @@
 ---
-title: "Lec4-5 In-Class Exercise"
+title: "Lec5 In-Class Exercise"
 author: "Luc Mekouar"
 date: "2023-10-04"
 output:
   pdf_document:
-  html_document:
-    df_print: paged
 ---
 
 ```{r setup, include=FALSE}
@@ -18,8 +16,7 @@ Extracting the data from local drive:
 my_data <- read_csv("/Users/lucmekouar/Desktop/POLI 3148/!!class files/_DataPublic_/vdem/1984_2022/vdem_1984_2022_external.csv")
 ```
 
-
-1.  Coodbook lookup. Look up the codebook, answer the following questions:
+1.  Codebook lookup. Look up the codebook, answer the following questions:
 
 <!-- -->
 
@@ -30,14 +27,10 @@ i.  What indicators regarding the quality of education are available in the V-De
 
 ii. What are the data's coverage (i.e., for which countries and years do we have data?)
 
-The data covers a total of 202 countries, and spans from 1789 to 2022. Find below a detailed list of which countries are included, and for which year.
+The enitre VDem dataset covers a total of 202 countries, and spans from 1789 to 2022. Find below a detailed list of which countries are included, and for which year.
 
 ```{r}
-Countries_and_years_clean <- read_csv("/Users/lucmekouar/Desktop/POLI 3148/
-REPO_Luc_POLI3148/week 5__data wrangling.2 & data visualization.1/HW/Countries_
-and_years_clean.csv") |>
-  view()
-
+Countries_and_years_clean_complete_dataset <- read_csv("/Users/lucmekouar/Desktop/POLI 3148/REPO_Luc_POLI3148/week 5__data wrangling.2 & data visualization.1/HW/Countries_and_years_clean.csv")
 ```
 
 iii. What are their sources? Provide the link to least 1 source.
@@ -121,7 +114,7 @@ educational_quality |>
   arrange(-(index_1_avg_edu_qual))
 ```
 
-b.Change of education quality from 1984 to 2022
+b.    Change of education quality from 1984 to 2022
 
 ```{r}
 educational_quality |>
