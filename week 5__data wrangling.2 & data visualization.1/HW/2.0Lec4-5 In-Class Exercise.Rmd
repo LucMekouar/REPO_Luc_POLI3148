@@ -8,15 +8,15 @@ output: pdf_document
 Extracting the data from local drive:
 
 ```{r}
+
 my_data <- read_csv("/Users/lucmekouar/Desktop/POLI 3148/!!class files/_DataPublic_/vdem/1984_2022/vdem_1984_2022_external.csv")
 
 ```
 
 1.  Coodbook lookup. Look up the codebook, answer the following questions:
 
-```{=html}
 <!-- -->
-```
+
 i.  What indicators regarding the quality of education are available in the V-Dem datasets?
 
 -   Educational inequality, Gini (e_peedgini)
@@ -39,9 +39,8 @@ Their sources are mentioned in the Bibliographie section of the document called 
 
 2.  Subset by columns
 
-```{=html}
 <!-- -->
-```
+
 i.  Create a dataset containing only the country-year identifiers and indicators of education quality.
 
 Now, I will take only a subset of the V-Dem dataset, namely the file called "vdem_1984_2022_external.csv" to do this exercise as adviced in class.
@@ -60,9 +59,8 @@ educational_quality <- educational_quality |>
 
 3.  Subset by rows
 
-```{=html}
 <!-- -->
-```
+
 i.  List 5 countries-years that have the highest education level among its population.
 
 ```{r}
@@ -136,3 +134,5 @@ educational_quality |> select(Country, Year, `Educational inequality`) |>
   filter(`Educational inequality` > 0) |>
   slice_min(order_by = `Educational inequality`, n = 5)
 ```
+
+link to github r markdown file: <https://github.com/LucMekouar/REPO_Luc_POLI3148/blob/main/week%205__data%20wrangling.2%20%26%20data%20visualization.1/HW/2.0Lec4-5%20In-Class%20Exercise.Rmd>
