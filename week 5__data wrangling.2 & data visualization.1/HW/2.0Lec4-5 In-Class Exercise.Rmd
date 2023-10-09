@@ -117,14 +117,27 @@ educational_quality |>
 b.    Change of education quality from 1984 to 2022
 
 ```{r}
+# Change from 1984 to 2022 overall
 educational_quality |>
   filter(Year >= 1984 & Year <= 2022) |>
   arrange(Year) |>
   group_by(Country) |>
-  summarise(index_2_chg_edu_qual = last(`Education 15+`) - 
+  summarise(index_2_chg_edu_qual_overall = last(`Education 15+`) - 
               first(`Education 15+`), na.rm = TRUE) |>
   ungroup() |>
-  arrange(-(index_2_chg_edu_qual))
+  arrange(-(index_2_chg_edu_qual_overall))
+```
+```{r}
+# Change from 1984 to 2022 year on year
+educational_quality |> select(Country,Year,`Education 15+`) |>
+  filter(Year >= 1984 & Year <= 2022) |>
+  arrange(Year) |>
+  group_by(Country) |>
+  mutate(index_2_chg_edu_qual_yoy = `Education 15+` - 
+              lag(`Education 15+`, n = 1), na.rm = TRUE) |>
+  ungroup() |>
+  select(Country,Year,index_2_chg_edu_qual_yoy) |>
+  arrange(-(index_2_chg_edu_qual_yoy))
 ```
 
 iii. Examine the data and briefly discuss: Which countries perform the best and the worst in terms of education quality in the past four decades?
