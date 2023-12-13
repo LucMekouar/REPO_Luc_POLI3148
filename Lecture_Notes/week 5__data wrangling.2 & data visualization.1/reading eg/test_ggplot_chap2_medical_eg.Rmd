@@ -1,0 +1,85 @@
+---
+title: "test_ggplot_chap2_medical_eg"
+author: "Luc"
+date: "2023-10-04"
+output: pdf_document
+---
+
+```{r}
+data <- read.csv("/Users/lucmekouar/Desktop/POLI 3148/!!POLI_3148_repo/week 5__data wrangling.2 & data visualization.1/reading eg/medical data/insurance.csv")
+
+# create an obesity variable
+data <- insurance
+insurance$obese <- ifelse(insurance$bmi >= 30, 
+                          "obese", "not obese")
+
+insurance <- insurance |> 
+  rename("expenses" = "charges")
+
+# specify dataset and mapping
+library(ggplot2)
+ggplot(data = insurance,
+       mapping = aes(x = age, y = expenses))
+
+# add points
+ggplot(data = insurance,
+       mapping = aes(x = age, y = expenses)) +
+  geom_point()
+
+```
+
+```{r}
+# make points blue, larger, and semi-transparent
+ggplot(data = insurance,
+       mapping = aes(x = age, y = expenses)) +
+  geom_point(color = "cornflowerblue",
+             alpha = .7,
+             size = 2)
+```
+
+```{r}
+# add a line of best fit.
+ggplot(data = insurance,
+       mapping = aes(x = age, y = expenses)) +
+  geom_point(color = "cornflowerblue",
+             alpha = .5,
+             size = 2) +
+  geom_smooth(method = "lm")
+```
+
+
+```{r}
+# indicate sex using color
+ggplot(data = insurance,
+       mapping = aes(x = age, 
+                     y = expenses,
+                     color = smoker)) +
+  geom_point(alpha = .5,
+             size = 2) +
+  geom_smooth(method = "lm", 
+              se = FALSE, 
+              size = 1.5)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

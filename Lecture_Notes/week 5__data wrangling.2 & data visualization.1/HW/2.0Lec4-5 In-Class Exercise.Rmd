@@ -1,0 +1,162 @@
+---
+title: "Lec5 In-Class Exercise"
+author: "Luc Mekouar"
+date: "2023-10-04"
+output:
+  pdf_document:
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+```
+
+Extracting the data from local drive:
+
+```{r}
+my_data <- read_csv("/Users/lucmekouar/Desktop/POLI 3148/!!class files/_DataPublic_/vdem/1984_2022/vdem_1984_2022_external.csv")
+```
+
+1.  Codebook lookup. Look up the codebook, answer the following questions:
+
+<!-- -->
+
+i.  What indicators regarding the quality of education are available in the V-Dem datasets?
+
+-   Educational inequality, Gini (e_peedgini)
+-   Education 15+ (E) (e_peaveduc)
+
+ii. What are the data's coverage (i.e., for which countries and years do we have data?)
+
+The enitre VDem dataset covers a total of 202 countries, and spans from 1789 to 2022. Find below a detailed list of which countries are included, and for which year.
+
+```{r}
+Countries_and_years_clean_complete_dataset <- read_csv("/Users/lucmekouar/Desktop/POLI 3148/REPO_Luc_POLI3148/week 5__data wrangling.2 & data visualization.1/HW/Countries_and_years_clean.csv")
+```
+
+iii. What are their sources? Provide the link to least 1 source.
+
+Their sources are mentioned in the Bibliographie section of the document called "codebook". Here is the first source they cite:
+
+" Abad, L. A., Davies, E. A. R. & Luiten Van Zanden, J. (2012), 'Prices and wages in Argentina, Bolivia, Chile, Colombia, Mexico and Peru (Data appendix in: Between conquest and independence: Real wages and demographic change in Spanish America, 1530-1820)', Explorations in Economic History 49(2), 149--166. URL: www.iisg.nl/hpw/ ".
+
+2.  Subset by columns
+
+<!-- -->
+
+i.  Create a dataset containing only the country-year identifiers and indicators of education quality.
+
+Now, I will take only a subset of the V-Dem dataset, namely the file called "vdem_1984_2022_external.csv" to do this exercise as adviced in class.
+
+```{r}
+educational_quality <- my_data |> select(country_name, year, e_peedgini, 
+                                         e_peaveduc) |>
+  rename("Country" = "country_name", "Year" = "year")
+```
+
+ii. Rename the columns of education quality to make them informative.
+
+```{r}
+educational_quality <- educational_quality |> 
+  rename("Educational inequality" = "e_peedgini", "Education 15+" = 
+           "e_peaveduc" )
+```
+
+3.  Subset by rows
+
+<!-- -->
+
+i.  List 5 countries-years that have the highest education level among its population.
+
+```{r}
+educational_quality |> select(Country, Year, `Education 15+`) |>
+  slice_max(order_by = `Education 15+`, n = 5)
+#13 rows are showing as these rows are all tied in terms of "education 15+" 
+# (a measure of education level)
+```
+
+ii. List 5 countries-years that suffer from the most severe inequality in education.
+
+```{r}
+educational_quality |>
+  slice_max(order_by = `Educational inequality`, n = 5)
+```
+
+4.  Summarize the data
+
+<!-- -->
+
+i.  Check data availability: For which countries and years are the indicators of education quality available?
+
+```{r}
+educational_quality |>
+  na.omit(educational_quality)
+```
+
+ii. Create two types of country-level indicators of education quality
+
+<!-- -->
+
+a.  Average level of education quality from 1984 to 2022
+
+```{r}
+# index_1_avg_edu_qual is not a good measure of quality as it uses data on the 
+# average number years of education (15+ year old), which is arguably different 
+# form quality, but is the closest the author could find in the dataset. Only 
+# one variable could be used as the other measure relevant, education 
+# inequality, has different units and therefore both variables would have to be 
+# normalized first before any operation can be done to combine them.
+educational_quality |>
+  filter(Year >= 1984 & Year <= 2022) |>
+  arrange(Year) |>
+  group_by(Country) |>
+  summarise(index_1_avg_edu_qual = mean(`Education 15+`), na.rm = TRUE) |>
+  ungroup() |>
+  arrange(-(index_1_avg_edu_qual))
+```
+
+b.    Change of education quality from 1984 to 2022
+
+```{r}
+# Change from 1984 to 2022 overall
+educational_quality |>
+  filter(Year >= 1984 & Year <= 2022) |>
+  arrange(Year) |>
+  group_by(Country) |>
+  summarise(index_2_chg_edu_qual_overall = last(`Education 15+`) - 
+              first(`Education 15+`), na.rm = TRUE) |>
+  ungroup() |>
+  arrange(-(index_2_chg_edu_qual_overall))
+```
+```{r}
+# Change from 1984 to 2022 year on year
+educational_quality |> select(Country,Year,`Education 15+`) |>
+  filter(Year >= 1984 & Year <= 2022) |>
+  arrange(Year) |>
+  group_by(Country) |>
+  mutate(index_2_chg_edu_qual_yoy = `Education 15+` - 
+              lag(`Education 15+`, n = 1), na.rm = TRUE) |>
+  ungroup() |>
+  select(Country,Year,index_2_chg_edu_qual_yoy) |>
+  arrange(-(index_2_chg_edu_qual_yoy))
+```
+
+iii. Examine the data and briefly discuss: Which countries perform the best and the worst in terms of education quality in the past four decades?
+
+Looking at the average national inequality in education, form 1984 to 2022, measured by the number of years of education done on average by citizens at or over the age of 15, Burkina Faso, Niger and Mali had the worse education quality, according to VDem data. Moreover, one can also inquire into the largest shift education quality from 1984 to 2022, where Botswana, Singapore and Lybia arrive as the top 3 positive change in education quality. Note that only one country decreased in education quality: Tajikistan. As it stands in 2022, the 5 countries with the largest average number of years of education done on average by citizens at or over the age of 15 can be found below:
+
+```{r}
+educational_quality |> select(Country,Year, `Education 15+`) |>
+  filter(Year == 2022) |>
+  slice_max(order_by = `Education 15+`, n = 5)
+```
+
+Furthermore, from the latest data available (2010), the 5 countries with the least inequality of education (potentially aslo a factor of quality of education) can be found below:
+
+```{r}
+educational_quality |> select(Country, Year, `Educational inequality`) |>
+  filter(Year == 2010) |>
+  filter(`Educational inequality` > 0) |>
+  slice_min(order_by = `Educational inequality`, n = 5)
+```
+
+[link to github r markdown file](https://github.com/LucMekouar/REPO_Luc_POLI3148/blob/main/week%205__data%20wrangling.2%20%26%20data%20visualization.1/HW/2.0Lec4-5%20In-Class%20Exercise.Rmd)
